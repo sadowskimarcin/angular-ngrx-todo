@@ -1,0 +1,14 @@
+<h3>TODOS</h3>
+<ul>
+  <li *ngFor="let todo of todos$ | async">
+    <app-todo-record [todo]="todo"></app-todo-record>
+  </li>
+</ul>
+
+<app-loader *ngIf="isLoading$ | async"></app-loader>
+
+<button (click)="nextPage()">Load more</button>
+<button (click)="getTodos()">Reset</button>
+<br/>
+<br/>
+

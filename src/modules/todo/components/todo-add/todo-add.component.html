@@ -1,0 +1,10 @@
+<label for="todo-add">Nowe zadanie</label>
+<input
+  id="todo-add"
+  type="text"
+  autofocus="autofocus"
+  (keyup.enter)="addTodo()"
+  placeholder="Co chcesz zrobić?"
+  [formControl]="nameField"
+/>
+

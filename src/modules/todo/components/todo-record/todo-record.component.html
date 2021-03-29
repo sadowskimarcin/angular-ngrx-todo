@@ -1,0 +1,8 @@
+<button class="destroy" (click)="deleteTodo()">X</button>
+<label>
+  <input class="toggle" type="checkbox" [formControl]="checkField"/>
+</label>
+<label (dblclick)="activeEditMode()">
+  {{ _todo.name }}
+</label>
+
