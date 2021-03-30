@@ -1,0 +1,15 @@
+<button [routerLink]="['/all']" routerLinkActive="active">
+  All
+  {{ allTodosCount$ | async }}
+</button>
+
+<button [routerLink]="['/completed']" routerLinkActive="active">
+  Completed
+  {{ completedTodosCount$ | async }}
+</button>
+
+<button [routerLink]="['/active']" routerLinkActive="active">
+  Active
+  {{ activeTodosCount$ | async }}
+</button>
+<br/>

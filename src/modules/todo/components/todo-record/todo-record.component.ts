@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Todo } from 'Modules/todo/models/todo.model';
 import { TodoState } from 'Modules/todo/states';
 import * as TodoActions from 'Modules/todo/actions';
+import { of, Subject } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-todo-record',
@@ -12,11 +14,13 @@ import * as TodoActions from 'Modules/todo/actions';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoRecordComponent implements OnInit {
-  // tslint:disable-next-line:variable-name
   public _todo!: Todo;
   public checkField = new FormControl();
   public textField = new FormControl();
+  public isEditModeActivated: boolean = false;
+  public textUpdated$ = new Subject();
 
+  @ViewChild('textInput', { static: true }) textInput!: ElementRef;
   @Input()
   set todo(todo: Todo) {
     this._todo = todo;
@@ -28,6 +32,10 @@ export class TodoRecordComponent implements OnInit {
     private store: Store<TodoState>
   ) {
     this.checkField.valueChanges.subscribe(isChecked => this.todoOnCheck(isChecked));
+    this.textUpdated$.pipe(
+      switchMap(() => of(this.textField.value)),
+      tap(() => this.isEditModeActivated = false),
+    ).subscribe(text => this.changeTodoName(text));
   }
 
   private todoOnCheck(isChecked: boolean): void {
@@ -41,11 +49,23 @@ export class TodoRecordComponent implements OnInit {
     }));
   }
 
+  private changeTodoName(text: string): void {
+    this.store.dispatch(TodoActions.updateTodo({
+      update: {
+        id: this._todo.id,
+        changes: {
+          name: text
+        }
+      }
+    }));
+  }
+
   ngOnInit(): void {
   }
 
   public activeEditMode(): void {
-    console.log('activeEditMode');
+    this.isEditModeActivated = true;
+    setTimeout(() => this.textInput.nativeElement.focus());
   }
 
   public deleteTodo(): void {

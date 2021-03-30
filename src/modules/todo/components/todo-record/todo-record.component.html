@@ -1,8 +1,20 @@
 <button class="destroy" (click)="deleteTodo()">X</button>
+<button (click)="activeEditMode()">EDIT</button>
 <label>
   <input class="toggle" type="checkbox" [formControl]="checkField"/>
 </label>
 <label (dblclick)="activeEditMode()">
-  {{ _todo.name }}
+  <input
+    (keyup.enter)="textUpdated$.next()"
+    (blur)="textUpdated$.next()"
+    #textInput
+    type="text"
+    width="100%"
+    [formControl]="textField"
+    [hidden]="!isEditModeActivated"
+  >
+  <ng-template [ngIf]="!isEditModeActivated">
+    {{ _todo.name }}
+  </ng-template>
 </label>
 

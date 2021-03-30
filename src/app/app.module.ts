@@ -2,6 +2,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { EffectsModule } from '@ngrx/effects';
+import { routerReducer, StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
@@ -18,7 +19,9 @@ import { metaReducers } from './meta-reducers';
     AppRoutingModule,
     HttpClientModule,
     EffectsModule.forRoot(),
-    StoreModule.forRoot({}, {
+    StoreModule.forRoot({
+      router: routerReducer
+    }, {
       metaReducers,
       runtimeChecks: {
         strictStateImmutability: true,
@@ -27,6 +30,7 @@ import { metaReducers } from './meta-reducers';
         strictActionTypeUniqueness: true,
       },
     }),
+    StoreRouterConnectingModule.forRoot(),
 
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states

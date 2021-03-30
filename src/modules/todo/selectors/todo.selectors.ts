@@ -3,23 +3,16 @@ import { TODO_FEATURE_KEY } from 'Modules/todo/constans';
 import { pipe } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TodoModuleState, todosAdapter } from 'Modules/todo/states';
+import { selectRouteParams } from 'App/router.selectors';
 
 export const getTodosModuleState = createFeatureSelector<TodoModuleState>(
   TODO_FEATURE_KEY
 );
-// interface State {
-//   todos: TodoState;
-// }
-
-// export const reducers: ActionReducerMap<State> = {
-//   todos: TodoReducers.reducer,
-// };
 
 export const getTodoState = createSelector(
   getTodosModuleState,
   state => state.todos
 );
-// export const selectTodoState = createFeatureSelector<TodoState>(TODO_FEATURE_KEY);
 
 const {
   selectAll: getAllTodos,
@@ -37,24 +30,23 @@ export const completedTodos = pipe(
   map(todos => todos.filter(todo => todo.isCompleted))
 );
 
-
 export const activeTodos = pipe(
   select(getAllTodos),
   map(todos => todos.filter(todo => !todo.isCompleted))
 );
 
-// export const selectLastTodos = (count: number) => {
-//   return pipe(
-//     select(selectAllTodos),
-//     // takeLast(count)
-//     last()
-//   );
-// };
-
-// export const selectBookCollection = createSelector(
-//   selectTodos,
-//   selectCollectionState,
-//   (todos: ReadonlyArray<Todo>, collection: ReadonlyArray<Todo['id']>) => {
-//     return collection.map((id) => todos.find(todo => todo.id === id));
-//   }
-// );
+export const selectTodos = createSelector(
+  selectAllTodos,
+  selectRouteParams,
+  (todos, { filter }) => {
+      switch (filter) {
+        case 'all':
+          return todos;
+        case 'active':
+          return todos.filter(todo => !todo.isCompleted);
+        case 'completed':
+          return todos.filter(todo => todo.isCompleted);
+      }
+      throw new Error(`Filter ${filter} should never exists!`);
+  }
+);

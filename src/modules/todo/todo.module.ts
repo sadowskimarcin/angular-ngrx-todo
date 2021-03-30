@@ -13,6 +13,7 @@ import { TodoAddComponent } from './components/todo-add/todo-add.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TodoService } from './services/todo.service';
 import { EffectsModule } from '@ngrx/effects';
+import { TodoNavigationComponent } from './components/todo-navigation/todo-navigation.component';
 
 @NgModule({
   declarations: [
@@ -20,14 +21,15 @@ import { EffectsModule } from '@ngrx/effects';
     TodoListComponent,
     TodoRecordComponent,
     TodoAddComponent,
-    LoaderComponent
+    LoaderComponent,
+    TodoNavigationComponent
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     EffectsModule.forFeature(fromEffects.EFFECTS),
     StoreModule.forFeature(TODO_FEATURE_KEY, TodoReducers.reducers),
-    TodoRoutingModule
+    TodoRoutingModule,
   ],
   providers: [
     TodoService
